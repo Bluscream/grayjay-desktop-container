@@ -1,0 +1,5 @@
+[submodule "vendor/Grayjay.Desktop"]
+	path = vendor/Grayjay.Desktop
+	url = https://gitlab.futo.org/videostreaming/Grayjay.Desktop.git
+	branch = master
+	fetchRecurseSubmodules = true

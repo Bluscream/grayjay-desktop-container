@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set +e
+
+git -C vendor/Grayjay.Desktop reset --hard
+git -C vendor/Grayjay.Desktop clean -fdx
+git -C vendor/Grayjay.Desktop submodule update --init --recursive --force
+
+git -C vendor/Grayjay.Desktop apply --whitespace=fix "$(git rev-parse --show-toplevel)/patches/"*.patch

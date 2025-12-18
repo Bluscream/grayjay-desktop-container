@@ -1,0 +1,31 @@
+diff --git a/Grayjay.ClientServer/GrayjayCastingServer.cs b/Grayjay.ClientServer/GrayjayCastingServer.cs
+index a93f53b..5208ad3 100644
+--- a/Grayjay.ClientServer/GrayjayCastingServer.cs
++++ b/Grayjay.ClientServer/GrayjayCastingServer.cs
+@@ -51,10 +51,16 @@ namespace Grayjay.ClientServer
+
+         public GrayjayCastingServer()
+         {
++            bool inContainer = string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), "true", StringComparison.OrdinalIgnoreCase);
++            int listenPort = 0;
++            if (int.TryParse(Environment.GetEnvironmentVariable("GRAYJAY_CASTING_PORT"), out var parsed) && parsed > 0 && parsed <= 65535)
++                listenPort = parsed;
++
+             var builder = WebApplication.CreateBuilder();
+             builder.WebHost.ConfigureKestrel(serverOptions =>
+             {
+-                serverOptions.Listen(IPAddress.Any, 0);
++                var bindAddress = inContainer ? IPAddress.Any : IPAddress.Any;
++                serverOptions.Listen(bindAddress, listenPort);
+             });
+
+             _app = builder.Build();
+@@ -68,6 +74,8 @@ namespace Grayjay.ClientServer
+                 Logger.i(nameof(GrayjayCastingServer), $"RunServerAsync: Server running on {address}.");
+                 BaseUri = new Uri(address);
+                 BaseUrl = address;
++                if (BaseUri.Host == "0.0.0.0" || BaseUri.Host == "[::]")
++                    BaseUrl = BaseUrl.Replace(BaseUri.Host, "127.0.0.1");
+                 if (BaseUrl.EndsWith('/'))
+                     BaseUrl = BaseUrl.Substring(0, BaseUrl.Length - 1);
+             });

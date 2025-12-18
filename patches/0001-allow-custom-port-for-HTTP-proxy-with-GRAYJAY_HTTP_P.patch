@@ -1,0 +1,57 @@
+diff --git a/Grayjay.ClientServer/Proxy/HttpProxy.cs b/Grayjay.ClientServer/Proxy/HttpProxy.cs
+index 79919e9..9ba78fb 100644
+--- a/Grayjay.ClientServer/Proxy/HttpProxy.cs
++++ b/Grayjay.ClientServer/Proxy/HttpProxy.cs
+@@ -12,10 +12,12 @@ namespace Grayjay.ClientServer.Proxy
+         private readonly List<HttpProxySession> _sessions = new List<HttpProxySession>();
+         private CancellationTokenSource? _cancellationTokenSource = null;
+         public IPEndPoint LocalEndPoint => (IPEndPoint)_listener.LocalEndpoint;
++        private readonly IPAddress _advertisedAddress;
+
+-        public HttpProxy(IPEndPoint localEndPoint)
++        public HttpProxy(IPEndPoint localEndPoint, IPAddress? advertisedAddress = null)
+         {
+             _listener = new TcpListener(localEndPoint.Address, localEndPoint.Port);
++            _advertisedAddress = advertisedAddress ?? localEndPoint.Address;
+         }
+
+         public string Add(HttpProxyRegistryEntry entry, IPAddress? localAddress = null)
+@@ -26,7 +28,8 @@ namespace Grayjay.ClientServer.Proxy
+             var id = Guid.NewGuid();
+             entry.Id = id;
+             _entries.AddOrUpdate(id, entry, (i, e) => entry);
+-            return $"http://{(localAddress ?? LocalEndPoint.Address).ToUrlAddress()}:{LocalEndPoint.Port}/{id}";
++            var addr = (localAddress ?? _advertisedAddress);
++            return $"http://{addr.ToUrlAddress()}:{LocalEndPoint.Port}/{id}";
+         }
+         public void Remove(Guid id)
+         {
+@@ -94,7 +97,20 @@ namespace Grayjay.ClientServer.Proxy
+                 {
+                     if (_httpProxyLoopback == null)
+                     {
+-                        _httpProxyLoopback = new HttpProxy(new IPEndPoint(IPAddress.Loopback, 0));
++                        bool inContainer = string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), "true", StringComparison.OrdinalIgnoreCase);
++                        int port = 0;
++                        IPAddress listenAddress = IPAddress.Loopback;
++                        IPAddress advertiseAddress = IPAddress.Loopback;
++
++                        if (inContainer)
++                        {
++                            listenAddress = IPAddress.Any;
++                            advertiseAddress = IPAddress.Loopback;
++                            if (int.TryParse(Environment.GetEnvironmentVariable("GRAYJAY_HTTP_PROXY_PORT"), out var envPort) && envPort > 0 && envPort <= 65535)
++                                port = envPort;
++                        }
++
++                        _httpProxyLoopback = new HttpProxy(new IPEndPoint(listenAddress, port), advertiseAddress);
+                         _httpProxyLoopback.Start();
+                     }
+                     return _httpProxyLoopback;
+@@ -122,4 +138,4 @@ namespace Grayjay.ClientServer.Proxy
+             }
+         }
+     }
+-}
+\ No newline at end of file
++}

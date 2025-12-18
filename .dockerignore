@@ -1,0 +1,16 @@
+.git
+.gitmodules
+.gitignore
+.gitattributes
+.git/lfs
+**/bin
+**/obj
+**/.vs
+**/.idea
+Grayjay.Desktop.Web/node_modules
+Grayjay.Desktop.Web/dist
+*.zip
+*.7z
+*.tar
+*.tar.gz
+grayjay-data/

@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  grayjay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: grayjay-desktop-headless
+    ports:
+      - "11338:11338"
+      - "11339:11339"
+      - "11340:11340"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - GRAYJAY_HTTP_PROXY_PORT=11339
+      - GRAYJAY_CASTING_PORT=11340
+      - XDG_DATA_HOME=/root/Grayjay
+    command: ["./Grayjay", "--server"]
+    restart: unless-stopped
+    volumes:
+      - ./data:/root/Grayjay
