@@ -44,7 +44,7 @@ git lfs pull --include="vendor/Grayjay.Desktop/JustCef/prebuilt/linux-x64/**,ven
 5. Build the image:
 
 ```sh
-docker compose build
+./scripts/build
 ```
 
 6. Run a container:

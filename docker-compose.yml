@@ -2,10 +2,7 @@ version: "3.9"
 
 services:
   grayjay:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: grayjay-desktop-headless
+    image: grayjay-desktop:0.2.0
     ports:
       - "11338:11338"
       - "11339:11339"
