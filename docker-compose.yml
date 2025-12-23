@@ -2,10 +2,8 @@ version: "3.9"
 
 services:
   grayjay:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: grayjay-desktop-headless
+    image: bluscream1/grayjay-desktop-container:latest
+    # Alternative: ghcr.io/bluscream/grayjay-desktop-container:latest
     ports:
       - "11338:11338"
       - "11339:11339"

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>Grayjay Desktop Container</Name>
+  <Repository>bluscream1/grayjay-desktop-container:latest</Repository>
+  <Registry>https://hub.docker.com/r/bluscream1/grayjay-desktop-container</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Bluscream/grayjay-desktop-container</Support>
+  <Project>https://github.com/Bluscream/grayjay-desktop-container</Project>
+  <Overview>Run a Dockerized version of the Grayjay Desktop application in server mode. Access the web interface at http://[IP]:[PORT:11338]</Overview>
+  <Category>MediaApp:Other</Category>
+  <WebUI>http://[IP]:[PORT:11338]/</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/Bluscream/grayjay-desktop-container/main/unraid/icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs>./Grayjay --server</PostArgs>
+  <CPUset/>
+  <DateInstalled>2025-12-23T00:00:00-00:00</DateInstalled>
+  <DateCreated>2025-12-23T00:00:00-00:00</DateCreated>
+  <DateModified>2025-12-23T00:00:00-00:00</DateModified>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port" Target="11338" Default="11338" Mode="tcp" Description="Port for the Grayjay web interface" Type="Port" Display="always" Required="true" Mask="false">11338</Config>
+  <Config Name="HTTP Proxy Port" Target="11339" Default="11339" Mode="tcp" Description="Port for the HTTP proxy service" Type="Port" Display="always" Required="true" Mask="false">11339</Config>
+  <Config Name="Casting Port" Target="11340" Default="11340" Mode="tcp" Description="Port for casting helper service" Type="Port" Display="always" Required="true" Mask="false">11340</Config>
+  <Config Name="Data Directory" Target="/root/Grayjay" Default="/mnt/user/appdata/grayjay" Mode="rw" Description="Directory to store Grayjay application data" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/grayjay</Config>
+  <Environment Variable="DOTNET_RUNNING_IN_CONTAINER" Value="true" Mode="" Description="Indicates the application is running in a container"/>
+  <Environment Variable="GRAYJAY_HTTP_PROXY_PORT" Value="11339" Mode="" Description="HTTP proxy port"/>
+  <Environment Variable="GRAYJAY_CASTING_PORT" Value="11340" Mode="" Description="Casting helper port"/>
+  <Environment Variable="XDG_DATA_HOME" Value="/root/Grayjay" Mode="" Description="Directory for application data"/>
+</Container>
+
