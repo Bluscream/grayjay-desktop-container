@@ -83,6 +83,48 @@ git -C vendor/Grayjay.Desktop ls-files --others --exclude-standard -z | xargs -0
 3. Commit those patches to this repo.
 
 
+## Publishing to Docker Hub and GitHub Container Registry
+
+This repository includes a GitHub Actions workflow that automatically builds and publishes Docker images to both Docker Hub and GitHub Container Registry (ghcr.io).
+
+### Setup
+
+To enable automatic publishing, you need to configure the following secrets in your GitHub repository:
+
+1. **Docker Hub Secrets** (Settings → Secrets and variables → Actions):
+   - `DOCKERHUB_USERNAME`: Your Docker Hub username
+   - `DOCKERHUB_TOKEN`: Your Docker Hub access token (create one at https://hub.docker.com/settings/security)
+
+2. **GitHub Container Registry**: No additional setup needed - uses the built-in `GITHUB_TOKEN`
+
+### Automatic Publishing
+
+The workflow automatically publishes images when:
+- Pushing to `main` or `master` branch (tags as `latest` and branch name)
+- Creating a git tag starting with `v` (e.g., `v1.0.0`)
+- Manually triggering via GitHub Actions UI (workflow_dispatch)
+
+### Image Locations
+
+After publishing, images will be available at:
+- **Docker Hub**: `docker.io/<DOCKERHUB_USERNAME>/grayjay-desktop-container`
+- **GitHub Container Registry**: `ghcr.io/<GITHUB_USERNAME>/grayjay-desktop-container`
+
+### Pulling Published Images
+
+```sh
+# From Docker Hub
+docker pull <DOCKERHUB_USERNAME>/grayjay-desktop-container:latest
+
+# From GitHub Container Registry
+docker pull ghcr.io/<GITHUB_USERNAME>/grayjay-desktop-container:latest
+```
+
+Note: For GHCR, you may need to authenticate first:
+```sh
+echo $GITHUB_TOKEN | docker login ghcr.io -u <GITHUB_USERNAME> --password-stdin
+```
+
 ## Developer Notes
 
 The code under `src/Grayjay.Desktop.Server` might seem redundant, but it exists so that we can build the application without the Chromium Embedded Framework (CEF) dependencies that are completely unnecessary for the purpose of the resulting Docker image.  Incidentally, it makes building the image significantly faster and less resource-intensive.
