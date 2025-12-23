@@ -13,7 +13,7 @@
   <Category>MediaApp:Other</Category>
   <WebUI>http://[IP]:[PORT:11338]/</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/Bluscream/grayjay-desktop-container/main/unraid/icon.png</Icon>
+  <Icon>https://grayjay.app/images/webclip.png</Icon>
   <ExtraParams/>
   <PostArgs>./Grayjay --server</PostArgs>
   <CPUset/>
@@ -32,4 +32,3 @@
   <Environment Variable="GRAYJAY_CASTING_PORT" Value="11340" Mode="" Description="Casting helper port"/>
   <Environment Variable="XDG_DATA_HOME" Value="/root/Grayjay" Mode="" Description="Directory for application data"/>
 </Container>
-
